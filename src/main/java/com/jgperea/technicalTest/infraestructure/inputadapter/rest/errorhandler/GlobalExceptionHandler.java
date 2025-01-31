@@ -2,7 +2,6 @@ package com.jgperea.technicalTest.infraestructure.inputadapter.rest.errorhandler
 
 import com.jgperea.technicalTest.domain.exception.NotFoundException;
 import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.ErrorDTO;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handlerNotFoundException(NotFoundException e) {
-        return ResponseEntity.status(HttpStatusCode.valueOf(HttpStatus.NOT_FOUND.value()))
+        return ResponseEntity.status(HttpStatusCode.valueOf(404))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(ErrorDTO.builder().message(e.getMessage()).build());
     }

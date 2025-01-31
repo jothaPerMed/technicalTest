@@ -2,10 +2,15 @@ package com.jgperea.technicalTest.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jgperea.technicalTest.domain.model.Brand;
+import com.jgperea.technicalTest.domain.model.InputRest;
+import com.jgperea.technicalTest.domain.model.OutputRest;
+import com.jgperea.technicalTest.domain.model.Prices;
 import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.ErrorDTO;
 import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.InputDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * The type Util tests.
@@ -146,5 +151,61 @@ public class UtilTests {
         return new ObjectMapper().writeValueAsString(
                 ErrorDTO.builder().message(Constant.MESSAGE_ERROR_NOT_FOUND).build()
         );
+    }
+
+    /**
+     * Gets pvp final.
+     *
+     * @return the pvp final
+     */
+    public static OutputRest getPvpFinal() {
+        return OutputRest.builder()
+                .idCadena(1L)
+                .idProducto(1L)
+                .fechaEntrada(LocalDateTime.now())
+                .fechaSalida(LocalDateTime.now())
+                .tarifaAplicar(1L)
+                .precioFinalAplicar(new BigDecimal(1L))
+                .build();
+    }
+
+    /**
+     * Gets price final.
+     *
+     * @return the price final
+     */
+    public static Prices getPriceFinal() {
+        return Prices.builder().brand(Brand.builder().brandId(1L).build()).build();
+    }
+
+    /**
+     * Input rest input rest.
+     *
+     * @return the input rest
+     */
+    public static InputRest inputRest() {
+        var fecha = LocalDateTime.of(2020, 06, 14, 10, 00, 00);
+        return InputRest.builder()
+                .fechaEntrada(fecha)
+                .idCadena(EnumBrand.ZARA.branId.longValue())
+                .idProducto(35455L)
+                .build();
+    }
+
+    /**
+     * Output rest output rest.
+     *
+     * @return the output rest
+     */
+    public static OutputRest outputRest() {
+        var fecha = LocalDateTime.of(2020, 06, 14, 10, 00, 00);
+        return OutputRest.builder()
+                .fechaEntrada(fecha)
+                .fechaSalida(fecha)
+                .idCadena(EnumBrand.ZARA.branId.longValue())
+                .idProducto(35455L)
+                .tarifaAplicar(1L)
+                .precioFinalAplicar(new BigDecimal(1))
+                .build();
     }
 }

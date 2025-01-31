@@ -2,6 +2,7 @@ package com.jgperea.technicalTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jgperea.technicalTest.infraestructure.inputadapter.rest.PricesApiImplRestAdapter;
 import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.InputDTO;
 import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.OutputDTO;
 import com.jgperea.technicalTest.util.Constant;
@@ -16,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,11 +27,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @SpringBootTest
 class TechnicalTestApplicationTests {
+
+    @Autowired
+    private PricesApiImplRestAdapter controller;
     /**
      * The Mock mvc.
      */
     @Autowired
     MockMvc mockMvc;
+
+
+    @Test
+    void contextLoads() throws Exception {
+        assertThat(controller).isNotNull();
+    }
     /**
      * Test 1.
      *

@@ -230,7 +230,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<!-- copiar recursos estáticos al área de compilación-->
+		<!-- copiar recursos al área de compilación-->
 		<resources>
 			<resource>
 				<directory>${project.basedir}/src/main/resources</directory>
