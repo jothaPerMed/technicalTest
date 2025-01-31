@@ -8,9 +8,11 @@ import com.jgperea.technicalTest.domain.model.OutputRest;
 import com.jgperea.technicalTest.domain.model.Prices;
 import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.ErrorDTO;
 import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.InputDTO;
+import com.jgperea.technicalTest.infraestructure.inputadapter.rest.data.OutputDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 /**
  * The type Util tests.
@@ -193,6 +195,35 @@ public class UtilTests {
     }
 
     /**
+     * Input rest input rest.
+     *
+     * @return the input rest
+     */
+    public static InputDTO inputRestDTO() {
+        return InputDTO.builder()
+                .fechaDeAplicacion("2020-06-14-10.00.00")
+                .identificadorDeCadena(EnumBrand.ZARA.branId)
+                .identificadorDeProducto(EnumProduct.TEST.productId)
+                .build();
+    }
+
+    /**
+     * Output dto output dto.
+     *
+     * @return the output dto
+     */
+    public static OutputDTO outputDTO() {
+        var fecha = LocalDateTime.of(2020, 06, 14, 10, 00, 00);
+        return OutputDTO.builder()
+                .fechasDeAplicacion(Arrays.asList("2020-06-14-10.00.00", "2020-06-15-10.00.00"))
+                .identificadorDeProducto(EnumProduct.TEST.productId)
+                .identificadorDeCadena(EnumBrand.ZARA.branId)
+                .tarifaAplicar(new BigDecimal(1L))
+                .precioFinalAplicar(new BigDecimal(1))
+                .build();
+    }
+
+    /**
      * Output rest output rest.
      *
      * @return the output rest
@@ -208,4 +239,5 @@ public class UtilTests {
                 .precioFinalAplicar(new BigDecimal(1))
                 .build();
     }
+
 }

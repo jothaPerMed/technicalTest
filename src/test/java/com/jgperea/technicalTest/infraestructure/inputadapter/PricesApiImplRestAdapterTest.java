@@ -1,9 +1,8 @@
 package com.jgperea.technicalTest.infraestructure.inputadapter;
 
-import com.jgperea.technicalTest.application.usecase.PriceUseCaseImpl;
-import com.jgperea.technicalTest.domain.mapper.PriceDomainMapper;
-import com.jgperea.technicalTest.domain.model.InputRest;
-import com.jgperea.technicalTest.infraestructure.outputadapter.integration.PriceOutputIntegrationAdapter;
+import com.jgperea.technicalTest.application.input.PriceUseCase;
+import com.jgperea.technicalTest.infraestructure.inputadapter.mapper.PriceRestMapper;
+import com.jgperea.technicalTest.infraestructure.inputadapter.rest.PricesApiImplRestAdapter;
 import com.jgperea.technicalTest.util.EnumBrand;
 import com.jgperea.technicalTest.util.EnumProduct;
 import com.jgperea.technicalTest.util.UtilTests;
@@ -17,27 +16,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+
 /**
  * The type Prices api impl rest adapter test.
  */
 @ExtendWith(MockitoExtension.class)
 class PricesApiImplRestAdapterTest {
     @Mock
-    private PriceOutputIntegrationAdapter priceOutputIntegrationAdapter;
+    private PriceUseCase priceUseCase;
     @Mock
-    private PriceDomainMapper priceDomainMapper;
+    private PriceRestMapper priceRestMapper;
     @InjectMocks
-    private PriceUseCaseImpl priceUseCase;
+    private PricesApiImplRestAdapter pricesApiImplRestAdapter;
 
     /**
-     * Pvp final.
+     * Final price.
      */
     @Test
-    void pvpFinal() {
-        var inputTest = InputRest.builder().build();
-        when(priceDomainMapper.toOutputRest(any())).thenReturn(UtilTests.getPvpFinal());
-        when(priceOutputIntegrationAdapter.pvpFinal(any())).thenReturn(UtilTests.getPriceFinal());
-        assertEquals(priceUseCase.pvpFinal(inputTest).getIdCadena(), EnumBrand.ZARA.branId.longValue());
-        assertEquals(priceUseCase.pvpFinal(inputTest).getIdProducto(), EnumProduct.TEST.productId.longValue());
+    void finalPrice() {
+        when(priceRestMapper.toInputRest(any())).thenReturn(UtilTests.inputRest());
+        when(priceRestMapper.toOutputDTO(any())).thenReturn(UtilTests.outputDTO());
+        when(priceUseCase.pvpFinal(any())).thenReturn(UtilTests.outputRest());
+        assertEquals(pricesApiImplRestAdapter.finalPrice(UtilTests.inputRestDTO()).getBody().getIdentificadorDeCadena().longValue(),
+                EnumBrand.ZARA.branId.longValue());
+        assertEquals(pricesApiImplRestAdapter.finalPrice(UtilTests.inputRestDTO()).getBody().getIdentificadorDeProducto().longValue(),
+                EnumProduct.TEST.productId.longValue());
     }
 }
