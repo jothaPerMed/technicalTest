@@ -28,6 +28,13 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<openapi-generator.version>7.11.0</openapi-generator.version>
+		<openapi.generator.generateApis>true</openapi.generator.generateApis>
+		<openapi.generator.generateSupportingFiles>false</openapi.generator.generateSupportingFiles>
+		<mapstruct.version>1.6.3</mapstruct.version>
+		<openapi.version>2.8.4</openapi.version>
+		<jakarta.validation.version>3.1.0</jakarta.validation.version>
+		<jackson.databind.nullable.version>0.2.6</jackson.databind.nullable.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -38,7 +45,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -59,6 +65,54 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<!--mapstruct-->
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${mapstruct.version}</version>
+		</dependency>
+		<!-- Junit 5 Dependencies -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-launcher</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Dependencia necesaria para los tags-->
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+			<version>${jackson.databind.nullable.version}</version>
+		</dependency>
+		<!-- JSR 303 - Bean Validation API -->
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>${jakarta.validation.version}</version>
+		</dependency>
+		<!-- Dependencia necesaria para la compilación de maven-->
+		<!-- https://mvnrepository.com/artifact/jakarta.xml.bind/jakarta.xml.bind-api -->
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>4.0.2</version>
+		</dependency>
+		<!-- Dependencia necesaria para la configuración de swagger-->
+		<dependency>
+			<groupId>io.swagger.core.v3</groupId>
+			<artifactId>swagger-annotations</artifactId>
+			<version>2.2.28</version>
+		</dependency>
+		<!-- OpenAPI dependency Swagger-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${openapi.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -88,7 +142,108 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<!-- Configuración para la compilación de api por medio del plugin openApi-->
+			<plugin>
+				<groupId>org.openapitools</groupId>
+				<artifactId>openapi-generator-maven-plugin</artifactId>
+				<version>${openapi-generator.version}</version>
+				<executions>
+					<execution>
+						<id>technicaltest-api</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>
+								${project.basedir}/src/main/resources/openapi/openapi.yml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+							<library>spring-boot</library>
+							<modelPackage>com.jgperea.technicalTest.infraestructure.inputadapter.rest.data
+							</modelPackage>
+							<apiPackage>com.jgperea.technicalTest.infraestructure.inputadapter.rest</apiPackage>
+							<generateModels>true</generateModels>
+							<generateApis>${openapi.generator.generateApis}</generateApis>
+							<generateSupportingFiles>${openapi.generator.generateSupportingFiles}
+							</generateSupportingFiles>
+							<logToStderr>true</logToStderr>
+							<addCompileSourceRoot>true</addCompileSourceRoot>
+							<modelNameSuffix>DTO</modelNameSuffix>
+							<configOptions>
+								<additionalModelTypeAnnotations>
+									@lombok.Data
+									@lombok.Builder
+									@lombok.AllArgsConstructor
+									@lombok.NoArgsConstructor
+									@com.fasterxml.jackson.annotation.JsonInclude(com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY)
+								</additionalModelTypeAnnotations>
+								<reactive>false</reactive>
+								<!-- Javax deprecated to Jakarta -->
+								<useJakartaEe>true</useJakartaEe>
+								<!-- Remove Default -->
+								<skipDefaultInterface>true</skipDefaultInterface>
+								<!-- Remove Response Entity Response -->
+								<useResponseEntity>true</useResponseEntity>
+								<useSpringBoot3>true</useSpringBoot3>
+								<interfaceOnly>true</interfaceOnly>
+								<serializableModel>false</serializableModel>
+								<!-- Remove _ to name function -->
+								<delegatePattern>false</delegatePattern>
+								<java8>false</java8>
+								<discriminatorCaseSensitive>true</discriminatorCaseSensitive>
+								<serializableModel>true</serializableModel>
+								<sourceFolder>src/main/java</sourceFolder>
+								<generatedConstructorWithRequiredArgs>false</generatedConstructorWithRequiredArgs>
+							</configOptions>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Configuración para la compilación del plugin de mapstruct-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${mapstruct.version}</version>
+						</path>
+					</annotationProcessorPaths>
+					<compilerArgs>
+						<compilerArg>
+							-Amapstruct.suppressGeneratorTimestamp=true
+						</compilerArg>
+						<compilerArg>
+							-Amapstruct.suppressGeneratorVersionInfoComment=true
+						</compilerArg>
+						<compilerArg>
+							-Amapstruct.defaultComponentModel=spring
+						</compilerArg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
 		</plugins>
+		<!-- copiar recursos estáticos al área de compilación-->
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.properties</include>
+					<include>**/*.yml</include>
+					<include>**/*.yaml</include>
+					<include>**/*.sql</include>
+					<include>**/banner.txt</include>
+				</includes>
+			</resource>
+		</resources>
 	</build>
 
 </project>
